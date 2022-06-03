@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Tarea{% endblock %}
+
+{% block body %}
+    <h1>Crear tarea</h1>
+    {# Hacer include de la vista que corresponde #}
+    {% include 'comunes/_mensajes.html.twig' %}
+    {% include 'comunes/_formulario.html.twig' with {'accion': path('app_crear_tarea')} %}
+{% endblock %}

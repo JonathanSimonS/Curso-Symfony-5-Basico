@@ -1,0 +1,6 @@
+<form method="POST" action="{{accion}}">
+  <div class="form-group">
+    <input type="text" class="form-control mt-3" value="{{tarea.descripcion}}" id="descripcion" name="descripcion" aria-describedby="emailHelp" placeholder="Descripción">
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">{{etiqueta_btn_enviar|default('Guardar')}}</button>
+</form>
