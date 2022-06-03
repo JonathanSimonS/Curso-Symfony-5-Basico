@@ -1,3 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Tarea{% endblock %}
+
 {% block body %}
-editar
+    <h1>Editar tarea</h1>
+    {# Hacer include de la vista que corresponde #}
+    {% include 'comunes/_mensajes.html.twig' %}
+    {# path para devolver ruta #}
+    {% include 'comunes/_formulario.html.twig' with {'accion': path('app_editar_tarea', {'id': tarea.id}), 'etiqueta_btn_enviar': 'Editar'} %}
 {% endblock %}

@@ -9,8 +9,8 @@
         <thead>
             <tr>
                 {# <th scope="col">#</th> #}
-                <th scope="col">Descripción</th>
-                <th scope="col">Acciones</th>
+                <th scope="col" >Descripción</th>
+                <th scope="col" class="text-center">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -18,9 +18,9 @@
             <tr>
                 {# <th scope="row">{{index+1}}</th> #}
                 <td>{{tarea.descripcion}}</td>
-                <td>
-                    <a href="{{ path('app_editar_tarea',{'id':tarea.id}) }}"> editar </a>
-                    <a href="{{ path('app_eliminar_tarea',{'id':tarea.id}) }}"> eliminar </a>
+                <td class="text-center">
+                    <a class="text-dark" href="{{ path('app_editar_tarea',{'id':tarea.id}) }}"><i class="bi-pencil"></i></a>
+                    <a class="text-dark" href="{{ path('app_eliminar_tarea',{'id':tarea.id}) }}"><i class="mx-1 bi bi-x-circle-fill"></i></a>
                 </td>
             </tr>
         {% else %}

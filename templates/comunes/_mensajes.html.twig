@@ -1,15 +1,12 @@
 {# con app.flashes accedemos a todos los mensajes #}
 {% for type, messages in app.flashes %}
   {% for message in messages %}
+    {# type en alert para cambiar la clase del tipo de mensaje #}
     <div class="alert alert-{{ type }} alert-dismissible fade show"
       role="alert">
+      <i class="bi-alarm"></i>
       {{ message }}
-      <button type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   {% endfor %}
 {% endfor %}
