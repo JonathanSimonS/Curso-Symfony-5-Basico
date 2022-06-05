@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tarea;
 use App\Repository\TareaRepository;
+use App\Service\TareaManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,54 +34,32 @@ class TareaController extends AbstractController
     }
 
     // CREO LA FUNCION CREAR
-    #[Route('/tarea/crear', name: 'app_crear_tarea')]
-    // Manag... le dice a Symfony que inyecte el servicio Doctrine en el método del controlador.
-    public function crear(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
+    /**
+     * @Route("/crear-tarea", name="app_crear_tarea")
+     */
+    public function crear(Request $request, ManagerRegistry $doctrine,): Response
     {
 
+        $descripcion = $request->request->get('descripcion', null);
         $tarea = new Tarea();
-
-        // obtenemos la descripcion mediante request | query si fuese GET ($request->query->get('descripcion');)
-        $descripcion = $request->request->get('descripcion', null); // si no existe devuelve null        
-
         if (null !== $descripcion) {
             if (!empty($descripcion)) {
-
-                //obtiene el objeto administrador de entidades de Doctrine, que es el objeto más importante de Doctrine.
-                //responsable de guardar y recuperar objetos de la base de datos.
                 $em = $doctrine->getManager(); //entityManager
-
                 $tarea->setDescripcion($descripcion);
-
-                // guarda la tarea
                 $em->persist($tarea);
-
-                // ejecuta un INSERT
                 $em->flush();
-
-                // mensaje flash
                 $this->addFlash(
                     'success',
-                    '¡Tarea creada correctamente!'
+                    'Tarea creada correctamente!'
                 );
-
-                // finamente la redirijo al listado
                 return $this->redirectToRoute('app_listado_tarea');
-
-            }else {
-                // mensaje flash
+            } else {
                 $this->addFlash(
                     'warning',
                     'El campo "Descripción es obligatorio"'
                 );
             }
         }
-
-        $errors = $validator->validate($tarea);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
-
         return $this->render('tarea/crear.html.twig', [
             "tarea" => $tarea,
         ]);
@@ -160,7 +139,7 @@ class TareaController extends AbstractController
         $em -> remove($tarea);
         $em ->flush(); // para que se ejcute en bbdd
         $this->addFlash(
-            'success',
+            'danger',
             '¡Tarea eliminada correctamente!'
         );
         // solo redirigimos
@@ -179,49 +158,30 @@ class TareaController extends AbstractController
 
     // FORMA RECOMENDADA
     // automáticamente nos busca la tarea con id idéntica, sin pasarselo por parámetro
-    public function editarConParamsConvert(Tarea $tarea, TareaRepository $tareaRepository, Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
+    public function editarConParamsConvert(TareaManager $tareaManager, Tarea $tarea, Request $request): Response
     {
 
-        // si no se encuentra, automaticamente devolverá la excepción, no hace falta
-        // if (null === $tarea) {
-        //     throw $this->createNotFoundException();
-        // }
-
-        // obtenemos la descripcion mediante request | query si fuese GET ($request->query->get('descripcion');)
-        $descripcion = $request->request->get('descripcion', null); // si no existe devuelve null        
-
+        $descripcion = $request->request->get('descripcion', null);
         if (null !== $descripcion) {
-            if (!empty($descripcion)) {
+            $tarea->setDescripcion($descripcion);
+            $errores = $tareaManager->validar($tarea);
 
-                //obtiene el objeto administrador de entidades de Doctrine, que es el objeto más importante de Doctrine.
-                //responsable de guardar y recuperar objetos de la base de datos.
-                $em = $doctrine->getManager(); //entityManager
-
-                $tarea->setDescripcion($descripcion);
-
-                // ejecuta un INSERT
-                $em->flush();
-
-                // mensaje flash
-                $this->addFlash('success','¡Tarea editada correctamente!' );
-
-                // finamente la redirijo al listado
-                return $this->redirectToRoute('app_listado_tarea');
-
-            }else {
-                // mensaje flash
+            if (0 === count($errores)) {
+                $tareaManager->crear($tarea);
                 $this->addFlash(
-                    'warning',
-                    'El campo "Descripción" es obligatorio'
+                    'success',
+                    'Tarea editada correctamente!'
                 );
+                return $this->redirectToRoute('app_listado_tarea');
+            } else {
+                foreach ($errores as $error) {
+                    $this->addFlash(
+                        'warning',
+                        $error->getMessage()
+                    );
+                }
             }
         }
-
-        $errors = $validator->validate($tarea);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
-
         return $this->render('tarea/editar.html.twig', [
             "tarea" => $tarea,
         ]);

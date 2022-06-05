@@ -3,5 +3,10 @@
 {% block title %}Tareas - Error 404{% endblock %}
 
 {% block body %}
-   <h1>Página no encontrada - ERROR 404<h1>
+    <h1 class="mt-5">ERROR 404</h1>
+    <h2 class="mt-2">La página solicitada no ha sido encontrada.</h2>
+    
+    <p class="mt-5">
+        Puede revisar la URL o <a href="{{ path('app_listado_tarea') }}">volver a la página principal.</a>.
+    </p>
 {% endblock %}

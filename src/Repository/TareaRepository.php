@@ -39,6 +39,15 @@ class TareaRepository extends ServiceEntityRepository
         }
     }
 
+    public function buscarTareaPorDescripcion(string $descripcion){
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.descripcion = :valorDescripcion')
+            ->setParameter('valorDescripcion', $descripcion)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 //    /**
 //     * @return Tarea[] Returns an array of Tarea objects
 //     */
