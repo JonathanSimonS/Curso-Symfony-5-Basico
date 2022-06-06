@@ -9,7 +9,7 @@
     {# path para devolver ruta #}
     
     {# opcion con parámetros #}
-    {% include 'comunes/_formulario.html.twig' with {'accion': path('app_editar_tarea_con_params_convert', {'id': tarea.id}), 'etiqueta_btn_enviar': 'Editar'} %}
+    {% include 'comunes/_formulario.html.twig' with {'accion': path('app_editar_tarea_servicio', {'id': tarea.id}), 'etiqueta_btn_enviar': 'Editar'} %}
     {# {% include 'comunes/_formulario.html.twig' with {'accion': path('app_editar_tarea', {'id': tarea.id}), 'etiqueta_btn_enviar': 'Editar'} %} #}
 
 {% endblock %}

@@ -145,10 +145,47 @@ class TareaController extends AbstractController
         // solo redirigimos
         return $this->redirectToRoute('app_listado_tarea');
     }
+
+    //************ SERVICIOS  ************//
+    
+    /**
+     * @Route("/crear-tarea-servicio", name="app_crear_tarea_servicio")
+     */
+    public function crearServicio(TareaManager $tareaManager, Request $request): Response
+    {
+        $descripcion = $request->request->get('descripcion', null);
+        $tarea = new Tarea();
+        if (null !== $descripcion) {
+            $tarea->setDescripcion($descripcion);
+            $errores = $tareaManager->validar($tarea);
+
+            // if (empty($errores)) no funcionaría porque no estaría vacío
+            if (0 === count($errores)) {
+                $tareaManager->crear($tarea);
+                $this->addFlash(
+                    'success',
+                    'Tarea creada correctamente!'
+                );
+                return $this->redirectToRoute('app_listado_tarea');
+            } else {
+                foreach ($errores as $error) {
+                    $this->addFlash(
+                        'warning',
+                        $error->getMessage()
+                    );
+                }
+            }
+        }
+        return $this->render('tarea/crear.html.twig', [
+            "tarea" => $tarea,
+        ]);
+    }
+
+
     /**
      * @Route(
-     * "/tarea/editar-params/{id}", 
-     * name="app_editar_tarea_con_params_convert", 
+     * "/tarea/editar-servicio/{id}", 
+     * name="app_editar_tarea_servicio", 
      * requirements={"id"="\d+"}
      * )
      */
@@ -158,7 +195,7 @@ class TareaController extends AbstractController
 
     // FORMA RECOMENDADA
     // automáticamente nos busca la tarea con id idéntica, sin pasarselo por parámetro
-    public function editarConParamsConvert(TareaManager $tareaManager, Tarea $tarea, Request $request): Response
+    public function editarConParamsConvertServicio(TareaManager $tareaManager, Tarea $tarea, Request $request): Response
     {
 
         $descripcion = $request->request->get('descripcion', null);
@@ -186,4 +223,24 @@ class TareaController extends AbstractController
             "tarea" => $tarea,
         ]);
     }
+
+    // CREO LA FUNCION ELIMINAR CON SERVICIO USANDO TAREAMANAGER
+    /**
+     * @Route(
+     * "/tarea-eliminar-servicio/{id}", 
+     * name="app_eliminar_tarea_servicio", 
+     * requirements={"id"="\d+"}
+     * )
+     */
+    public function eliminarServicio(Tarea $tarea,TareaManager $tareaManager): Response
+    {
+        $tareaManager->eliminar($tarea);
+        $this->addFlash(
+            'danger',
+            '¡Tarea eliminada correctamente!'
+        );
+        // solo redirigimos
+        return $this->redirectToRoute('app_listado_tarea');
+    }
+
 }

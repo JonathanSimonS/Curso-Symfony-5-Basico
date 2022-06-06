@@ -23,8 +23,8 @@
                 {# <th scope="row">{{index+1}}</th> #}
                 <td>{{tarea.descripcion}}</td>
                 <td class="text-center">
-                    <a class="text-dark" href="{{ path('app_editar_tarea_con_params_convert',{'id':tarea.id}) }}"><i class="bi-pencil"></i></a>
-                    <a class="text-dark" href="{{ path('app_eliminar_tarea',{'id':tarea.id}) }}"><i class="mx-1 bi bi-x-circle-fill"></i></a>
+                    <a class="text-dark" href="{{ path('app_editar_tarea_servicio',{'id':tarea.id}) }}"><i class="bi-pencil"></i></a>
+                    <a class="text-dark" href="{{ path('app_eliminar_tarea_servicio',{'id':tarea.id}) }}"><i class="mx-1 bi bi-x-circle-fill"></i></a>
                 </td>
             </tr>
         {% else %}
